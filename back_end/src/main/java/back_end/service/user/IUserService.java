@@ -8,6 +8,6 @@ import javax.servlet.http.HttpSession;
 
 public interface IUserService {
 	
-	public JwtResponse login(HttpSession session, UserLogin userLogin) throws UserException, CustomException;
+	public JwtResponse login(HttpSession session, UserLogin userLogin) throws CustomException;
 	
 }

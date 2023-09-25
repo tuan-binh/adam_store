@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -65,8 +66,8 @@ public class UserService implements IUserService {
 				  .email(userPrinciple.getEmail())
 				  .phone(userPrinciple.getPhone())
 				  .address(userPrinciple.getAddress())
-				  .roles(userPrinciple.getAuthorities().stream().map(item -> roleService.findByRoleName(item.getAuthority())).collect(Collectors.toList()))
-				  .status()
+				  .roles(userPrinciple.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+				  .status(userPrinciple.isStatus())
 				  .build();
 	}
 	
