@@ -14,7 +14,7 @@ public interface ISizeService {
 	
 	SizeResponse findById(Long sizeId) throws CustomException;
 	
-	SizeResponse save(SizeRequest sizeRequest) throws CustomException;
+	SizeResponse save(SizeRequest sizeRequest);
 	
 	SizeResponse update(SizeRequest sizeRequest, Long sizeId);
 	

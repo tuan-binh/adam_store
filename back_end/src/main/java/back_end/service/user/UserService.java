@@ -1,8 +1,11 @@
 package back_end.service.user;
 
 import back_end.exception.CustomException;
+import back_end.model.domain.RoleName;
+import back_end.model.domain.Roles;
 import back_end.model.domain.Users;
 import back_end.model.dto.request.UserLogin;
+import back_end.model.dto.request.UserRegister;
 import back_end.model.dto.response.JwtResponse;
 import back_end.repository.IUserRepository;
 import back_end.security.jwt.JwtProvider;
@@ -14,10 +17,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +37,8 @@ public class UserService implements IUserService {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private JwtProvider jwtProvider;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@Override
 	public JwtResponse login(HttpSession session, UserLogin userLogin) throws CustomException {
@@ -69,6 +77,48 @@ public class UserService implements IUserService {
 				  .roles(userPrinciple.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 				  .status(userPrinciple.isStatus())
 				  .build();
+	}
+	
+	@Override
+	public Users register(UserRegister userRegister) throws CustomException {
+		if (userRepository.existsByEmail(userRegister.getEmail())) {
+			throw new CustomException("email is exists");
+		}
+		Set<Roles> roles = new HashSet<>();
+		if (userRegister.getRoles() == null || userRegister.getRoles().isEmpty()) {
+			roles.add(roleService.findByRoleName(RoleName.ROLE_USER));
+		} else {
+			userRegister.getRoles().forEach(
+					  role -> {
+						  switch (role) {
+							  case "admin":
+								  try {
+									  roles.add(roleService.findByRoleName(RoleName.ROLE_ADMIN));
+								  } catch (CustomException e) {
+									  throw new RuntimeException(e);
+								  }
+							  case "user":
+								  try {
+									  roles.add(roleService.findByRoleName(RoleName.ROLE_USER));
+								  } catch (CustomException e) {
+									  throw new RuntimeException(e);
+								  }
+							  default:
+								  try {
+									  throw new CustomException("role not found");
+								  } catch (CustomException e) {
+									  throw new RuntimeException(e);
+								  }
+						  }
+					  }
+			);
+		}
+		return userRepository.save(Users.builder()
+				  .fullName(userRegister.getFullName())
+				  .email(userRegister.getEmail())
+				  .password(passwordEncoder.encode(userRegister.getPassword()))
+				  .roles(roles)
+				  .build());
 	}
 	
 	public Users findUserByUserName(String username) throws CustomException {

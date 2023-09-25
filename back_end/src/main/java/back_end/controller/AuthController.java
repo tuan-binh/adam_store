@@ -1,7 +1,9 @@
 package back_end.controller;
 
 import back_end.exception.CustomException;
+import back_end.model.domain.Users;
 import back_end.model.dto.request.UserLogin;
+import back_end.model.dto.request.UserRegister;
 import back_end.model.dto.response.JwtResponse;
 import back_end.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,13 @@ public class AuthController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<JwtResponse> login(HttpSession session, @RequestBody UserLogin userLogin) throws CustomException {
-		return new ResponseEntity<>(userService.login(session,userLogin), HttpStatus.OK);
+		return new ResponseEntity<>(userService.login(session, userLogin), HttpStatus.OK);
+	}
+	
+	@PostMapping("/register")
+	public ResponseEntity<String> register(@RequestBody UserRegister userRegister) throws CustomException {
+		Users user = userService.register(userRegister);
+		return new ResponseEntity<>("success", HttpStatus.CREATED);
 	}
 	
 }

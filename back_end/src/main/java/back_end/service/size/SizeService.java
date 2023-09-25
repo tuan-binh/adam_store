@@ -42,7 +42,7 @@ public class SizeService implements ISizeService {
 	}
 	
 	@Override
-	public SizeResponse save(SizeRequest sizeRequest) throws CustomException {
+	public SizeResponse save(SizeRequest sizeRequest) {
 		return sizeMapper.toResponse(sizeRepository.save(sizeMapper.toEntity(sizeRequest)));
 	}
 	
