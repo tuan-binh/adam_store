@@ -6,6 +6,7 @@ import back_end.model.domain.Roles;
 import back_end.model.domain.Users;
 import back_end.model.dto.request.UserLogin;
 import back_end.model.dto.request.UserRegister;
+import back_end.model.dto.request.UserUpdate;
 import back_end.model.dto.response.JwtResponse;
 import back_end.repository.IUserRepository;
 import back_end.security.jwt.JwtProvider;
@@ -80,7 +81,7 @@ public class UserService implements IUserService {
 	}
 	
 	@Override
-	public Users register(UserRegister userRegister) throws CustomException {
+	public void register(UserRegister userRegister) throws CustomException {
 		if (userRepository.existsByEmail(userRegister.getEmail())) {
 			throw new CustomException("email is exists");
 		}
@@ -113,12 +114,32 @@ public class UserService implements IUserService {
 					  }
 			);
 		}
-		return userRepository.save(Users.builder()
+		userRepository.save(Users.builder()
 				  .fullName(userRegister.getFullName())
 				  .email(userRegister.getEmail())
 				  .password(passwordEncoder.encode(userRegister.getPassword()))
 				  .roles(roles)
 				  .build());
+	}
+	
+	@Override
+	public void updateInformation(UserUpdate userUpdate, Authentication authentication) throws CustomException {
+		UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+		Users user = findUserByUserName(userPrinciple.getUsername());
+		user.setAddress(userUpdate.getAddress());
+		user.setPhone(userUpdate.getPhone());
+		userRepository.save(user);
+	}
+	
+	@Override
+	public void changePassword(Optional<String> password, Authentication authentication) throws CustomException {
+		if(password.isPresent()) {
+			UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+			Users user = findUserByUserName(userPrinciple.getUsername());
+			user.setPassword(password.get());
+			userRepository.save(user);
+		}
+		throw new CustomException("you must be has password");
 	}
 	
 	public Users findUserByUserName(String username) throws CustomException {

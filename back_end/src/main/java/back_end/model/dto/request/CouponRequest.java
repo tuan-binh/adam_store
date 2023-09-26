@@ -16,10 +16,10 @@ public class CouponRequest {
 	
 	private double percent;
 	
-	@JsonFormat(timezone = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
 	private Date startDate;
 	
-	@JsonFormat(timezone = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
 	private Date endDate;
 	
 	private int stock;

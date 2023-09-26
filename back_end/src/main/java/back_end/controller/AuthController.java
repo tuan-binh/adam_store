@@ -28,7 +28,7 @@ public class AuthController {
 	
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody UserRegister userRegister) throws CustomException {
-		Users user = userService.register(userRegister);
+		userService.register(userRegister);
 		return new ResponseEntity<>("success", HttpStatus.CREATED);
 	}
 	

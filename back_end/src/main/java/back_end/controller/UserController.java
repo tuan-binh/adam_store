@@ -1,11 +1,34 @@
 package back_end.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import back_end.exception.CustomException;
+import back_end.model.dto.request.UserUpdate;
+import back_end.service.user.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/user")
 @CrossOrigin("*")
 public class UserController {
+	
+	@Autowired
+	private IUserService userService;
+	
+	@PutMapping("/update")
+	public ResponseEntity<String> updateInformation(@RequestBody UserUpdate userUpdate, Authentication authentication) throws CustomException {
+		userService.updateInformation(userUpdate,authentication);
+		return new ResponseEntity<>("update your information successfully", HttpStatus.OK);
+	}
+	
+	@PutMapping("/password")
+	public ResponseEntity<String> changePassword(@RequestParam Optional<String> password,Authentication authentication) throws CustomException {
+		userService.changePassword(password,authentication);
+		return new ResponseEntity<>("update password successfully",HttpStatus.OK);
+	}
+	
 }
