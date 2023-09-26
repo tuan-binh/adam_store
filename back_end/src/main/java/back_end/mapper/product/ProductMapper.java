@@ -7,6 +7,7 @@ import back_end.mapper.product_detail.ProductDetailMapper;
 import back_end.model.domain.Category;
 import back_end.model.domain.Product;
 import back_end.model.dto.request.ProductRequest;
+import back_end.model.dto.request.ProductUpdate;
 import back_end.model.dto.response.ImageResponse;
 import back_end.model.dto.response.ProductDetailResponse;
 import back_end.model.dto.response.ProductResponse;
@@ -43,6 +44,16 @@ public class ProductMapper implements IGenericMapper<Product, ProductRequest, Pr
 				  .category(findCategoryById(productRequest.getCategoryId()))
 				  // upload list ảnh và cập nhật ảnh đại diện sản phẩm sẽ ở service
 				  .status(productRequest.isStatus())
+				  .build();
+	}
+	
+	public Product toEntity(ProductUpdate productUpdate) throws CustomException {
+		return Product.builder()
+				  .productName(productUpdate.getProductName())
+				  .description(productUpdate.getDescription())
+				  .bought(productUpdate.getBought())
+				  .category(findCategoryById(productUpdate.getCategoryId()))
+				  .status(productUpdate.isStatus())
 				  .build();
 	}
 	
