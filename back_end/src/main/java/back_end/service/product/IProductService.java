@@ -2,6 +2,7 @@ package back_end.service.product;
 
 import back_end.exception.CustomException;
 import back_end.model.dto.request.ImageRequest;
+import back_end.model.dto.request.ProductDetailRequest;
 import back_end.model.dto.request.ProductRequest;
 import back_end.model.dto.request.ProductUpdate;
 import back_end.model.dto.response.ImageResponse;
@@ -29,5 +30,7 @@ public interface IProductService {
 	List<ImageResponse> addImageToProduct(ImageRequest imageRequest) throws CustomException;
 	
 	List<ImageResponse> removeImageInProduct(Long imageId) throws CustomException;
+	
+	ProductResponse addNewProductDetail(ProductDetailRequest productDetailRequest) throws CustomException;
 	
 }

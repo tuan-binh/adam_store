@@ -2,6 +2,7 @@ package back_end.controller;
 
 import back_end.exception.CustomException;
 import back_end.model.dto.request.ImageRequest;
+import back_end.model.dto.request.ProductDetailRequest;
 import back_end.model.dto.request.ProductRequest;
 import back_end.model.dto.request.ProductUpdate;
 import back_end.model.dto.response.ImageResponse;
@@ -64,6 +65,16 @@ public class ProductController {
 	@DeleteMapping("/{imageId}/image")
 	public ResponseEntity<List<ImageResponse>> removeImageInProduct(@PathVariable Long imageId) throws CustomException {
 		return new ResponseEntity<>(productService.removeImageInProduct(imageId), HttpStatus.OK);
+	}
+	
+	@PostMapping("/productDetail")
+	public ResponseEntity<ProductResponse> addNewProductDetail(@RequestBody ProductDetailRequest productDetailRequest) throws CustomException {
+		return new ResponseEntity<>(productService.addNewProductDetail(productDetailRequest), HttpStatus.CREATED);
+	}
+	
+	@PutMapping("/productDetail/{productDetailId}")
+	public ResponseEntity<ProductResponse> updateProductDetail(@RequestBody ProductDetailRequest productDetailRequest, @PathVariable Long productDetailId) {
+		return null;
 	}
 	
 }

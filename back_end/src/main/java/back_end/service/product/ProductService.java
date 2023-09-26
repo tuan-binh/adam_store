@@ -3,14 +3,18 @@ package back_end.service.product;
 import back_end.exception.CustomException;
 import back_end.mapper.image.ImageMapper;
 import back_end.mapper.product.ProductMapper;
+import back_end.mapper.product_detail.ProductDetailMapper;
 import back_end.model.domain.ImageProduct;
 import back_end.model.domain.Product;
+import back_end.model.domain.ProductDetail;
 import back_end.model.dto.request.ImageRequest;
+import back_end.model.dto.request.ProductDetailRequest;
 import back_end.model.dto.request.ProductRequest;
 import back_end.model.dto.request.ProductUpdate;
 import back_end.model.dto.response.ImageResponse;
 import back_end.model.dto.response.ProductResponse;
 import back_end.repository.IImageRepository;
+import back_end.repository.IProductDetailRepository;
 import back_end.repository.IProductRepository;
 import back_end.service.upload_aws.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +41,10 @@ public class ProductService implements IProductService {
 	private ProductMapper productMapper;
 	@Autowired
 	private ImageMapper imageMapper;
+	@Autowired
+	private IProductDetailRepository productDetailRepository;
+	@Autowired
+	private ProductDetailMapper productDetailMapper;
 	@Autowired
 	private StorageService storageService;
 	
@@ -128,6 +136,12 @@ public class ProductService implements IProductService {
 		return iImageRepository.findAllByProductId(imageProduct.getProduct().getId()).stream()
 				  .map(item -> imageMapper.toResponse(item))
 				  .collect(Collectors.toList());
+	}
+	
+	@Override
+	public ProductResponse addNewProductDetail(ProductDetailRequest productDetailRequest) throws CustomException {
+		ProductDetail productDetail = productDetailRepository.save(productDetailMapper.toEntity(productDetailRequest));
+		return findById(productDetail.getProduct().getId());
 	}
 	
 	public ImageProduct findImageById(Long imageId) throws CustomException {
