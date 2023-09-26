@@ -1,6 +1,7 @@
 package back_end.service.order;
 
 import back_end.exception.CustomException;
+import back_end.model.dto.request.CheckoutRequest;
 import back_end.model.dto.response.OrderDetailResponse;
 import back_end.model.dto.response.OrderResponse;
 import org.springframework.data.domain.Page;
@@ -22,8 +23,18 @@ public interface IOrderService {
 	
 	List<OrderDetailResponse> buyProductByProductDetailId(Long productDetailId, Authentication authentication) throws CustomException;
 	
-	List<OrderDetailResponse> plusProductDetail(Long orderDetailId, Authentication authentication);
+	List<OrderDetailResponse> plusProductDetail(Long orderDetailId, Authentication authentication) throws CustomException;
 	
-	List<OrderDetailResponse> minusProductDetail(Long orderDetailId, Authentication authentication);
+	List<OrderDetailResponse> minusProductDetail(Long orderDetailId, Authentication authentication) throws CustomException;
+	
+	List<OrderDetailResponse> removeCartItemInCart(Long orderDetailId, Authentication authentication) throws CustomException;
+	
+	List<OrderDetailResponse> removeAllInCart(Authentication authentication) throws CustomException;
+	
+	OrderResponse checkoutOrder(CheckoutRequest checkoutRequest, Authentication authentication) throws CustomException;
+	
+	OrderResponse cancelOrder(Long orderId, Authentication authentication) throws CustomException;
+	
+	OrderResponse changeDelivery(String typeDelivery, Long orderId) throws CustomException;
 	
 }

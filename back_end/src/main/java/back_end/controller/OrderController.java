@@ -1,6 +1,7 @@
 package back_end.controller;
 
 import back_end.exception.CustomException;
+import back_end.model.dto.request.CheckoutRequest;
 import back_end.model.dto.response.OrderDetailResponse;
 import back_end.model.dto.response.OrderResponse;
 import back_end.service.order.IOrderService;
@@ -34,7 +35,7 @@ public class OrderController {
 		return new ResponseEntity<>(orderService.findAllOnUser(pageable, authentication), HttpStatus.OK);
 	}
 	
-	@GetMapping("/user/order/{orderId}")
+	@GetMapping("/user/{orderId}/order")
 	public ResponseEntity<List<OrderDetailResponse>> getOrderDetailByOrderId(@PathVariable Long orderId, Authentication authentication) throws CustomException {
 		return new ResponseEntity<>(orderService.getOrderDetailByOrderId(orderId, authentication), HttpStatus.OK);
 	}
@@ -44,19 +45,44 @@ public class OrderController {
 		return new ResponseEntity<>(orderService.getCartByUser(authentication), HttpStatus.OK);
 	}
 	
-	@PostMapping("/user/buy/{productDetailId}")
+	@PostMapping("/user/{productDetailId}/buy")
 	public ResponseEntity<List<OrderDetailResponse>> buyProductByProductDetailId(@PathVariable Long productDetailId, Authentication authentication) throws CustomException {
 		return new ResponseEntity<>(orderService.buyProductByProductDetailId(productDetailId, authentication), HttpStatus.CREATED);
 	}
 	
-	@PutMapping("/user/plus/{orderDetailId}")
-	public ResponseEntity<List<OrderDetailResponse>> plusProductDetail(@PathVariable Long orderDetailId, Authentication authentication) {
+	@PutMapping("/user/{orderDetailId}/plus")
+	public ResponseEntity<List<OrderDetailResponse>> plusProductDetail(@PathVariable Long orderDetailId, Authentication authentication) throws CustomException {
 		return new ResponseEntity<>(orderService.plusProductDetail(orderDetailId, authentication), HttpStatus.OK);
 	}
 	
-	@PutMapping("/user/minus/{orderDetailId}")
-	public ResponseEntity<List<OrderDetailResponse>> minusProductDetail(@PathVariable Long orderDetailId, Authentication authentication) {
+	@PutMapping("/user/{orderDetailId}/minus")
+	public ResponseEntity<List<OrderDetailResponse>> minusProductDetail(@PathVariable Long orderDetailId, Authentication authentication) throws CustomException {
 		return new ResponseEntity<>(orderService.minusProductDetail(orderDetailId, authentication), HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/user/{orderDetailId}/remove")
+	public ResponseEntity<List<OrderDetailResponse>> removeCartItemInCart(@PathVariable Long orderDetailId, Authentication authentication) throws CustomException {
+		return new ResponseEntity<>(orderService.removeCartItemInCart(orderDetailId, authentication), HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/user/clear")
+	public ResponseEntity<List<OrderDetailResponse>> removeAllInCart(Authentication authentication) throws CustomException {
+		return new ResponseEntity<>(orderService.removeAllInCart(authentication), HttpStatus.OK);
+	}
+	
+	@PostMapping("/user/checkout")
+	public ResponseEntity<OrderResponse> checkoutOrder(@RequestBody CheckoutRequest checkoutRequest, Authentication authentication) throws CustomException {
+		return new ResponseEntity<>(orderService.checkoutOrder(checkoutRequest, authentication), HttpStatus.OK);
+	}
+	
+	@PutMapping("/user/{orderId}/cancel")
+	public ResponseEntity<OrderResponse> cancelOrder(@PathVariable Long orderId, Authentication authentication) throws CustomException {
+		return new ResponseEntity<>(orderService.cancelOrder(orderId, authentication), HttpStatus.OK);
+	}
+	
+	@PutMapping("/admin/{orderId}/delivery")
+	public ResponseEntity<OrderResponse> changeDelivery(@RequestParam String typeDelivery, @PathVariable Long orderId) throws CustomException {
+		return new ResponseEntity<>(orderService.changeDelivery(typeDelivery, orderId), HttpStatus.OK);
 	}
 	
 }

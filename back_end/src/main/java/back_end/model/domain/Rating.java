@@ -1,5 +1,6 @@
 package back_end.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ public class Rating {
 	
 	private String content;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
 	private Date created;
 	
 }

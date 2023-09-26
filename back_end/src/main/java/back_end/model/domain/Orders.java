@@ -1,5 +1,6 @@
 package back_end.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class Orders {
 	@Enumerated(EnumType.STRING)
 	private TypeDelivery typeDelivery;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date timeDelivery;
 	
 	private String location;
