@@ -30,7 +30,7 @@ public class Users {
 	private String address;
 	
 	// lưu trữ list authorization của người dùng
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(
 			  name = "role_detail",
 			  joinColumns = @JoinColumn(name = "user_id"),
@@ -38,7 +38,7 @@ public class Users {
 	)
 	private Set<Roles> roles = new HashSet<>();
 	
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(
 			  name = "favourite",
 			  joinColumns = @JoinColumn(name = "user_id"),

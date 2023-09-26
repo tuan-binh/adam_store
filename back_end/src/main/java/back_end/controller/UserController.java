@@ -22,18 +22,18 @@ public class UserController {
 	private IUserService userService;
 	
 	@GetMapping("/favourite")
-	public ResponseEntity<List<ProductResponse>> getFavourite(Authentication authentication) {
-		return null;
+	public ResponseEntity<List<ProductResponse>> getFavourite(Authentication authentication) throws CustomException {
+		return new ResponseEntity<>(userService.getFavourite(authentication), HttpStatus.OK);
 	}
 	
 	@PostMapping("/{productId}/favourite")
-	public ResponseEntity<List<ProductResponse>> addProductToFavourite(@PathVariable Long productId, Authentication authentication) {
-		return null;
+	public ResponseEntity<List<ProductResponse>> addProductToFavourite(@PathVariable Long productId, Authentication authentication) throws CustomException {
+		return new ResponseEntity<>(userService.addProductToFavourite(productId, authentication), HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/{productId}/favourite")
-	public ResponseEntity<List<ProductResponse>> removeProductInFavourite(@PathVariable Long productId, Authentication authentication) {
-		return null;
+	public ResponseEntity<List<ProductResponse>> removeProductInFavourite(@PathVariable Long productId, Authentication authentication) throws CustomException {
+		return new ResponseEntity<>(userService.removeProductInFavourite(productId, authentication), HttpStatus.OK);
 	}
 	
 	@PutMapping("/update")

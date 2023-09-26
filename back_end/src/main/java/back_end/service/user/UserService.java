@@ -1,6 +1,8 @@
 package back_end.service.user;
 
 import back_end.exception.CustomException;
+import back_end.mapper.product.ProductMapper;
+import back_end.model.domain.Product;
 import back_end.model.domain.RoleName;
 import back_end.model.domain.Roles;
 import back_end.model.domain.Users;
@@ -8,6 +10,8 @@ import back_end.model.dto.request.UserLogin;
 import back_end.model.dto.request.UserRegister;
 import back_end.model.dto.request.UserUpdate;
 import back_end.model.dto.response.JwtResponse;
+import back_end.model.dto.response.ProductResponse;
+import back_end.repository.IProductRepository;
 import back_end.repository.IUserRepository;
 import back_end.security.jwt.JwtProvider;
 import back_end.security.user_principle.UserPrinciple;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +37,10 @@ public class UserService implements IUserService {
 	
 	@Autowired
 	private IUserRepository userRepository;
+	@Autowired
+	private ProductMapper productMapper;
+	@Autowired
+	private IProductRepository productRepository;
 	@Autowired
 	private IRoleService roleService;
 	@Autowired
@@ -133,13 +142,49 @@ public class UserService implements IUserService {
 	
 	@Override
 	public void changePassword(Optional<String> password, Authentication authentication) throws CustomException {
-		if(password.isPresent()) {
+		if (password.isPresent()) {
 			UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
 			Users user = findUserByUserName(userPrinciple.getUsername());
 			user.setPassword(password.get());
 			userRepository.save(user);
 		}
 		throw new CustomException("you must be has password");
+	}
+	
+	@Override
+	public List<ProductResponse> getFavourite(Authentication authentication) throws CustomException {
+		UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+		Users user = findUserByUserName(userPrinciple.getUsername());
+		return user.getFavourite().stream()
+				  .map(item -> productMapper.toResponse(item))
+				  .collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<ProductResponse> addProductToFavourite(Long productId, Authentication authentication) throws CustomException {
+		Product product = findProductById(productId);
+		UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+		Users user = findUserByUserName(userPrinciple.getUsername());
+		user.getFavourite().add(product);
+		return userRepository.save(user).getFavourite().stream()
+				  .map(item -> productMapper.toResponse(item))
+				  .collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<ProductResponse> removeProductInFavourite(Long productId, Authentication authentication) throws CustomException {
+		Product product = findProductById(productId);
+		UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+		Users user = findUserByUserName(userPrinciple.getUsername());
+		user.getFavourite().remove(product);
+		return userRepository.save(user).getFavourite().stream()
+				  .map(item -> productMapper.toResponse(item))
+				  .collect(Collectors.toList());
+	}
+	
+	public Product findProductById(Long productId) throws CustomException {
+		Optional<Product> optionalProduct = productRepository.findById(productId);
+		return optionalProduct.orElseThrow(() -> new CustomException("product not found"));
 	}
 	
 	public Users findUserByUserName(String username) throws CustomException {
