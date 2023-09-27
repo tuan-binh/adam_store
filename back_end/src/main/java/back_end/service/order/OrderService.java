@@ -364,6 +364,7 @@ public class OrderService implements IOrderService {
 				  .location(orders.getLocation())
 				  .phone(orders.getPhone())
 				  .total(orders.getTotal())
+				  .rating(orders.getRating())
 				  .status(orders.isStatus())
 				  .build();
 	}

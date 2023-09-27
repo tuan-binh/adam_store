@@ -33,4 +33,6 @@ public interface IProductService {
 	
 	ProductResponse addNewProductDetail(ProductDetailRequest productDetailRequest) throws CustomException;
 	
+	ProductResponse updateProductDetail(String price, String stock, Long productDetailId) throws CustomException;
+	
 }

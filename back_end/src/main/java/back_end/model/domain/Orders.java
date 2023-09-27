@@ -38,7 +38,7 @@ public class Orders {
 	@JoinColumn(name = "coupon_id")
 	private Coupon coupon;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "rate_id")
 	private Rating rating;
 	

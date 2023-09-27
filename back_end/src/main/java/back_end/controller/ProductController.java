@@ -73,8 +73,8 @@ public class ProductController {
 	}
 	
 	@PutMapping("/productDetail/{productDetailId}")
-	public ResponseEntity<ProductResponse> updateProductDetail(@RequestBody ProductDetailRequest productDetailRequest, @PathVariable Long productDetailId) {
-		return null;
+	public ResponseEntity<ProductResponse> updateProductDetail(@RequestParam String price, @RequestParam String stock, @PathVariable Long productDetailId) throws CustomException {
+		return new ResponseEntity<>(productService.updateProductDetail(price, stock, productDetailId), HttpStatus.OK);
 	}
 	
 }

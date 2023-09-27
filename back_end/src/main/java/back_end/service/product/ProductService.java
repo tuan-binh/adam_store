@@ -144,6 +144,35 @@ public class ProductService implements IProductService {
 		return findById(productDetail.getProduct().getId());
 	}
 	
+	@Override
+	public ProductResponse updateProductDetail(String price, String stock, Long productDetailId) throws CustomException {
+		double newPrice = 0;
+		int newStock = 0;
+		try {
+			newPrice = Double.parseDouble(price);
+			newStock = Integer.parseInt(stock);
+		} catch (Exception ignored) {
+		}
+		ProductDetail productDetail = findProductDetailById(productDetailId);
+		if (newPrice <= 0) {
+			throw new CustomException("price must be than 0");
+		}
+		if (newStock < 0) {
+			throw new CustomException("stock must be than 0");
+		}
+		if (newStock == 0) {
+			productDetail.setStatus(false);
+		}
+		productDetail.setStock(newStock);
+		productDetail.setPrice(newPrice);
+		return findById(productDetailRepository.save(productDetail).getProduct().getId());
+	}
+	
+	public ProductDetail findProductDetailById(Long productDetailId) throws CustomException {
+		Optional<ProductDetail> optionalProductDetail = productDetailRepository.findById(productDetailId);
+		return optionalProductDetail.orElseThrow(() -> new CustomException("product detail not found"));
+	}
+	
 	public ImageProduct findImageById(Long imageId) throws CustomException {
 		Optional<ImageProduct> optionalImageProduct = iImageRepository.findById(imageId);
 		return optionalImageProduct.orElseThrow(() -> new CustomException("image not found"));

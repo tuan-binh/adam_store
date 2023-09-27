@@ -1,5 +1,6 @@
 package back_end.model.dto.response;
 
+import back_end.model.domain.Rating;
 import back_end.model.domain.TypeDelivery;
 import lombok.*;
 
@@ -22,6 +23,8 @@ public class OrderResponse {
 	private String phone;
 	
 	private double total;
+	
+	private Rating rating;
 	
 	private boolean status;
 }
