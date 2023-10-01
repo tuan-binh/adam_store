@@ -19,7 +19,7 @@ function Navbar() {
         </Box>
       </Box>
       {/* navbar */}
-      <Box sx={{ position: 'sticky', top: '0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 30px' }}>
+      <Box sx={{ position: 'sticky', top: '0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 200px' }}>
         {/* logo */}
         <div>
           <Link to={"/"} style={{ textDecoration: 'none', color: '#000' }}>
